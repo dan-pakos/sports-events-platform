@@ -9,6 +9,8 @@ const schema = {
     CA_PATH: { type: "string" },
     CERT_PATH: { type: "string" },
     KEY_PATH: { type: "string" },
+    LOG_CLOUDWATCH_GROUP: { type: "string" },
+    LOG_CLOUDWATCH_REGION: { type: "string" },
   },
 };
 
@@ -22,6 +24,8 @@ declare module "fastify" {
       CA_PATH: string;
       CERT_PATH: string;
       KEY_PATH: string;
+      LOG_CLOUDWATCH_GROUP: string;
+      LOG_CLOUDWATCH_REGION: string;
     };
   }
 }

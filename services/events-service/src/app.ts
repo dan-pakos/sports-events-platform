@@ -1,9 +1,15 @@
-import Fastify, { type FastifyInstance } from "fastify";
+import Fastify, { type FastifyInstance, type FastifyBaseLogger } from "fastify";
 import env from "@fastify/env";
 import schema from "./env-schema.ts";
+import { createLogger } from "@sep/fastify-logger";
+
+const logger = createLogger({
+  serviceName: "sep-events-service",
+  isProduction: process.env.NODE_ENV === "production",
+});
 
 const app = Fastify({
-  logger: true,
+  loggerInstance: logger as FastifyBaseLogger,
 });
 
 /**
