@@ -1,0 +1,6 @@
+packages:
+  - "configs/*"
+  - "packages/*"
+  - "services/**"
+  - "web/**"
+  - "!**/test/**"
