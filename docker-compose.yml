@@ -1,0 +1,62 @@
+## INDEX ##
+
+# Namespace: Sports Events Platform (SEP)
+
+# 1. Events Database (SEP_EDB)
+# 2. Events Service (SEP_ES)
+
+services:
+  ### 1. Events Database (SEP_EDB)
+  ##############################
+  events-db:
+    image: postgres:16-alpine
+    container_name: ${SEP_EDB_NAME}
+    restart: always
+    environment:
+      POSTGRES_USER: ${SEP_EDB_USER}
+      POSTGRES_PASSWORD: ${SEP_EDB_PASSWORD}
+      POSTGRES_DB: ${SEP_EDB_DBNAME}
+    ports:
+      - "${SEP_EDB_PORT}:${SEP_EDB_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sep-network
+
+  ### 2. Events Service (SEP_ES)
+  ##############################
+  event-service:
+    container_name: ${SEP_ES_NAME}
+    env_file:
+      - .env.development
+    environment:
+      APP_HOST: ${SEP_ES_APP_HOST}
+      APP_PORT: ${SEP_ES_APP_PORT}
+      DATABASE_URL: ${SEP_EDB_URL}
+      NODE_ENV: ${NODE_ENV}
+      LOG_LEVEL: ${LOG_LEVEL}
+      CA_PATH: ${SEP_ES_CA_PATH}
+      CERT_PAT: ${SEP_ES_CERT_PATH}
+      KEY_PATH: ${SEP_ES_KEY_PATH}
+    ports:
+      - "${SEP_ES_APP_PORT}:${SEP_ES_APP_PORT}"
+    build:
+      context: .
+      dockerfile: ./services/events-service/Dockerfile.dev
+    volumes:
+      - ./services/events-service/src:/var/web/services/events-service/src
+      - /var/web/services/events-service/node_modules
+    command: bash -c "cd ./services/events-service && npm run dev:docker"
+    networks:
+      - sep-network
+
+##############################
+# SHARED RESOURCES
+##############################
+
+volumes:
+  postgres_data:
+
+networks:
+  sep-network:
+    driver: bridge
