@@ -31,7 +31,7 @@ async function startServer(app: FastifyInstance): Promise<void> {
       });
     });
 
-    app.log.info(`gRPC Server listening on ${address} (actual port: ${port})`);
+    app.log.info(`gRPC Server listening on ${address} (and port: ${port})`);
   } catch (error) {
     app.log.error(error);
     server.forceShutdown();
