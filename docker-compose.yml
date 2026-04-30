@@ -57,7 +57,7 @@ services:
     volumes:
       - ./services/events-service/src:/var/web/services/events-service/src
       - /var/web/services/events-service/node_modules
-    command: bash -c "cd ./services/events-service && pnpx prisma db push && npm run dev:docker"
+    command: bash -c "cd ./services/events-service && pnpx prisma db push --accept-data-loss && npm run dev:docker"
     networks:
       - sep-network
 

@@ -13,6 +13,13 @@ enum CompetitorType {
   PAIR
 }
 
+enum EventStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  CANCELED
+}
+
 model Sport {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
@@ -41,9 +48,9 @@ model Competitor {
 model Event {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  name      String?  @db.VarChar(150)
-  startTime DateTime @map("start_time") @db.Timestamptz()
-  status    String   @default("SCHEDULED") @db.VarChar(20)
+  name      String?     @db.VarChar(150)
+  startTime DateTime    @map("start_time") @db.Timestamptz()
+  status    EventStatus @default(SCHEDULED)
 
   sportId String @map("sport_id") @db.Uuid
   sport   Sport  @relation(fields: [sportId], references: [id], onDelete: Cascade)
