@@ -77,6 +77,9 @@ importers:
       pino:
         specifier: ^9.0.0
         version: 9.14.0
+      zod:
+        specifier: ^4.4.1
+        version: 4.4.1
     devDependencies:
       '@sep/eslint-config':
         specifier: workspace:*
@@ -2254,6 +2257,9 @@ packages:
 
   zeptomatch@2.1.0:
     resolution: {integrity: sha512-KiGErG2J0G82LSpniV0CtIzjlJ10E04j02VOudJsPyPwNZgGnRKQy7I1R7GMyg/QswnE4l7ohSGrQbQbjXPPDA==}
+
+  zod@4.4.1:
+    resolution: {integrity: sha512-a6ENMBBGZBsnlSebQ/eKCguSBeGKSf4O7BPnqVPmYGtpBYI7VSqoVqw+QcB7kPRjbqPwhYTpFbVj/RqNz/CT0Q==}
 
 snapshots:
 
@@ -4658,3 +4664,5 @@ snapshots:
     dependencies:
       grammex: 3.1.12
       graphmatch: 1.1.1
+
+  zod@4.4.1: {}

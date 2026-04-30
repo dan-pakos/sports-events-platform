@@ -81,7 +81,7 @@ export class Event {
     sportId: SportId,
     startTime: Date,
     timezone: string,
-    participants: { competitorId: CompetitorId; role: string | null }[],
+    participants: { competitorId: CompetitorId | null }[],
     metadata: Record<string, any> = {},
   ) {
     const now = new Date();
