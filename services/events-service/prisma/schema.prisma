@@ -36,6 +36,8 @@ model Competitor {
   name String         @db.VarChar(100)
   type CompetitorType @default(TEAM)
 
+  metadata Json? @db.JsonB
+
   sportId String @map("sport_id") @db.Uuid
   sport   Sport  @relation(fields: [sportId], references: [id], onDelete: Cascade)
 
@@ -51,6 +53,8 @@ model Event {
   name      String?     @db.VarChar(150)
   startTime DateTime    @map("start_time") @db.Timestamptz()
   status    EventStatus @default(SCHEDULED)
+
+  metadata Json? @db.JsonB
 
   sportId String @map("sport_id") @db.Uuid
   sport   Sport  @relation(fields: [sportId], references: [id], onDelete: Cascade)
@@ -72,6 +76,8 @@ model EventParticipant {
   competitor   Competitor @relation(fields: [competitorId], references: [id], onDelete: Cascade)
 
   role String? @db.VarChar(20)
+
+  metadata Json? @db.JsonB
 
   @@unique([eventId, competitorId])
   @@map("event_participants")
