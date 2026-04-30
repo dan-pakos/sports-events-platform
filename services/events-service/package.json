@@ -27,9 +27,10 @@
     "@sep/eslint-config": "workspace:*",
     "@sep/fastify-logger": "workspace:*",
     "@sep/tsconfig": "workspace:*",
-    "@types/node": "^20.0.0",
+    "@types/node": "^20.19.39",
     "eslint": "^10.2.1",
     "nodemon": "^3.1.14",
+    "prisma": "^7.8.0",
     "tsup": "^8.3.0",
     "tsx": "^4.19.0",
     "typescript": "^5.0.0"

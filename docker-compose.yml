@@ -12,6 +12,12 @@ services:
     image: postgres:16-alpine
     container_name: ${SEP_EDB_NAME}
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SEP_EDB_USER} -d ${SEP_EDB_DBNAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     environment:
       POSTGRES_USER: ${SEP_EDB_USER}
       POSTGRES_PASSWORD: ${SEP_EDB_PASSWORD}
@@ -45,10 +51,13 @@ services:
     build:
       context: .
       dockerfile: ./services/events-service/Dockerfile.dev
+    depends_on:
+      events-db:
+        condition: service_healthy
     volumes:
       - ./services/events-service/src:/var/web/services/events-service/src
       - /var/web/services/events-service/node_modules
-    command: bash -c "cd ./services/events-service && npm run dev:docker"
+    command: bash -c "cd ./services/events-service && pnpx prisma db push && npm run dev:docker"
     networks:
       - sep-network
 

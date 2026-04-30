@@ -11,12 +11,13 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
+    "@alexlau811/pino-cloudwatch": "^0.10.0",
     "pino": "^9.0.0",
-    "pino-pretty": "^11.0.0",
-    "@alexlau811/pino-cloudwatch": "^0.10.0"
+    "pino-pretty": "^11.0.0"
   },
   "devDependencies": {
     "@sep/tsconfig": "workspace:*",
+    "@types/node": "^20.19.39",
     "eslint": "^10.2.1",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0"

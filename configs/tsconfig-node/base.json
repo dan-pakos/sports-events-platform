@@ -20,7 +20,8 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true
+    "rewriteRelativeImportExtensions": true,
+    "types": ["node"]
   },
   "exclude": ["node_modules", "dist"]
 }
