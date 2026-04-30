@@ -36,7 +36,7 @@ WORKDIR /var/web
 COPY .gitignore .gitignore
 COPY --from=builder /var/web/out/json/ .
 COPY --from=builder /var/web/out/pnpm-lock.yaml .
-COPY --from=builder /var/web/services/events-service/prisma/schema.prisma ./prisma/schema.prisma
+COPY --from=builder /var/web/services/events-service/prisma ./prisma
 COPY --from=builder /var/web/services/events-service/prisma.config.ts ./prisma.config.ts
 
 RUN pnpm install --frozen-lockfile
