@@ -8,6 +8,7 @@ export class Event {
   #id: EventId;
   #sportId: SportId;
   #startTime: Date;
+  #timezone: string;
   #status: EventStatus;
   #participants: Participant[];
   #metadata: Record<string, any>;
@@ -22,6 +23,10 @@ export class Event {
 
   get startTime(): Date {
     return this.#startTime;
+  }
+
+  get timezone(): string {
+    return this.#timezone;
   }
 
   get status(): EventStatus {
@@ -40,6 +45,7 @@ export class Event {
     id: EventId,
     sportId: SportId,
     startTime: Date,
+    timezone: string,
     status: EventStatus,
     participants: Participant[],
     metadata: Record<string, any>,
@@ -47,6 +53,7 @@ export class Event {
     this.#id = id;
     this.#sportId = sportId;
     this.#startTime = startTime;
+    this.#timezone = timezone;
     this.#status = status;
     this.#participants = participants;
     this.#metadata = metadata;
@@ -60,6 +67,7 @@ export class Event {
       rawDbData.id as EventId,
       rawDbData.sportId as SportId,
       new Date(rawDbData.startTime),
+      rawDbData.timezone,
       rawDbData.status as EventStatus,
       rawDbData.participants || [],
       rawDbData.metadata || {},
@@ -72,6 +80,7 @@ export class Event {
   static prepareNew(
     sportId: SportId,
     startTime: Date,
+    timezone: string,
     participants: { competitorId: CompetitorId; role: string | null }[],
     metadata: Record<string, any> = {},
   ) {
@@ -87,9 +96,17 @@ export class Event {
       throw new Error("An event must have at least two participants.");
     }
 
+    // Must include valida timezone
+    try {
+      Intl.DateTimeFormat(undefined, { timeZone: timezone });
+    } catch (e) {
+      throw new Error(`Invalid timezone: ${timezone}`);
+    }
+
     return {
       sportId,
       startTime,
+      timezone,
       status: "SCHEDULED" as EventStatus,
       metadata,
       participants: participants.map((p) => ({

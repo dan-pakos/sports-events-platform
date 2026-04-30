@@ -52,6 +52,7 @@ model Event {
 
   name      String?     @db.VarChar(150)
   startTime DateTime    @map("start_time") @db.Timestamptz()
+  timezone  String
   status    EventStatus @default(SCHEDULED)
 
   metadata Json? @db.JsonB
