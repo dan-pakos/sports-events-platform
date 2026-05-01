@@ -56,7 +56,7 @@ To handle high traffic and ensure system reliability, the infrastructure could e
 
    Read Operations (Replicas): Read traffic (fetching events lists, sports, etc) from **Events WebApp REST API** will be provided from multiple Read Replicas.
 
-### Services
+### Microservices
 
 #### Events Service
 
