@@ -12,20 +12,6 @@ importers:
         specifier: latest
         version: 2.9.6
 
-  configs/eslint-config:
-    devDependencies:
-      '@eslint/js':
-        specifier: ^9.0.0
-        version: 9.39.4
-      eslint-config-prettier:
-        specifier: ^9.1.0
-        version: 9.1.2(eslint@10.2.1(jiti@2.6.1))
-      typescript-eslint:
-        specifier: ^8.0.0
-        version: 8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
-
-  configs/tsconfig-node: {}
-
   packages/fastify-logger:
     dependencies:
       '@alexlau811/pino-cloudwatch':
@@ -40,7 +26,7 @@ importers:
     devDependencies:
       '@sep/tsconfig':
         specifier: workspace:*
-        version: link:../../configs/tsconfig-node
+        version: link:../../shared/configs/tsconfig-node
       '@types/node':
         specifier: ^20.19.39
         version: 20.19.39
@@ -71,6 +57,12 @@ importers:
       '@prisma/client':
         specifier: ^7.8.0
         version: 7.8.0(prisma@7.8.0(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3))(typescript@5.9.3)
+      '@sep/fastify-logger':
+        specifier: workspace:*
+        version: link:../../packages/fastify-logger
+      '@sep/proto':
+        specifier: workspace:*
+        version: link:../../shared/proto
       fastify:
         specifier: ^5.8.5
         version: 5.8.5
@@ -86,13 +78,10 @@ importers:
     devDependencies:
       '@sep/eslint-config':
         specifier: workspace:*
-        version: link:../../configs/eslint-config
-      '@sep/fastify-logger':
-        specifier: workspace:*
-        version: link:../../packages/fastify-logger
+        version: link:../../shared/configs/eslint-config
       '@sep/tsconfig':
         specifier: workspace:*
-        version: link:../../configs/tsconfig-node
+        version: link:../../shared/configs/tsconfig-node
       '@types/node':
         specifier: ^20.19.39
         version: 20.19.39
@@ -120,6 +109,22 @@ importers:
       '@prisma/client-runtime-utils':
         specifier: 7.8.0
         version: 7.8.0
+
+  shared/configs/eslint-config:
+    devDependencies:
+      '@eslint/js':
+        specifier: ^9.0.0
+        version: 9.39.4
+      eslint-config-prettier:
+        specifier: ^9.1.0
+        version: 9.1.2(eslint@10.2.1(jiti@2.6.1))
+      typescript-eslint:
+        specifier: ^8.0.0
+        version: 8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
+
+  shared/configs/tsconfig-node: {}
+
+  shared/proto: {}
 
 packages:
 

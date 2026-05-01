@@ -40,6 +40,8 @@ RUN pnpm install --frozen-lockfile
 COPY --from=pruner /var/web/services/events-service/prisma ./services/events-service/prisma
 RUN pnpm --filter=@sep/events-service exec prisma generate
 
+# COPY --from=pruner /var/web/out/full/shared/proto ./shared/proto
+
 # BUILDER
 FROM base AS builder
 

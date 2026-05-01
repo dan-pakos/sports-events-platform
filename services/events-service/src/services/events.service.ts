@@ -9,12 +9,12 @@ const ErrorMap: Record<string, number> = {
 };
 
 export default class EventsService extends Service {
-  protoPath: string = "./../protos/events.proto";
+  protoFile: string = "events.proto";
   proto: any;
 
-  constructor() {
-    super();
-    this.proto = this.getPackageDefinition(this.protoPath);
+  constructor(protoRoot: string) {
+    super(protoRoot);
+    this.proto = this.getPackageDefinition(this.protoFile);
   }
 
   async createEvent(

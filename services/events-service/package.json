@@ -23,6 +23,8 @@
     "@grpc/proto-loader": "^0.8.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@sep/fastify-logger": "workspace:*",
+    "@sep/proto": "workspace:*",
     "fastify": "^5.8.5",
     "pg": "^8.20.0",
     "pino": "^9.0.0",
@@ -30,7 +32,6 @@
   },
   "devDependencies": {
     "@sep/eslint-config": "workspace:*",
-    "@sep/fastify-logger": "workspace:*",
     "@sep/tsconfig": "workspace:*",
     "@types/node": "^20.19.39",
     "eslint": "^10.2.1",
