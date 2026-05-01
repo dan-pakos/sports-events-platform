@@ -4,3 +4,5 @@ dist
 .turbo
 .git
 npm-debug.log
+docker-compose.yml
+.env*

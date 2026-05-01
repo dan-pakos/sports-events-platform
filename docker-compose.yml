@@ -38,7 +38,7 @@ services:
     environment:
       APP_HOST: ${SEP_ES_APP_HOST}
       APP_PORT: ${SEP_ES_APP_PORT}
-      DATABASE_URL: ${SEP_EDB_URL}
+      DATABASE_URL: ${SEP_ES_DATABASE_URL}
       NODE_ENV: ${NODE_ENV}
       LOG_LEVEL: ${LOG_LEVEL}
       CA_PATH: ${SEP_ES_CA_PATH}
@@ -57,7 +57,7 @@ services:
     volumes:
       - ./services/events-service/src:/var/web/services/events-service/src
       - /var/web/services/events-service/node_modules
-    command: bash -c "cd ./services/events-service && npm run dev:docker"
+    command: bash -c "cd ./services/events-service && pnpm run dev:docker"
     networks:
       - sep-network
 

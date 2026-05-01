@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package events;
+
+message Participant {
+  string competitor_id = 1;
+}
+
+message CreateEventRequest {
+  string sport_id = 1;
+  string start_time = 2;
+  string venue_timezone = 3;
+  repeated Participant participants = 4;
+}
+
+message CreateEventResponse {
+  bool success = 1;
+  string event_id = 2;
+  string status = 3;
+}
+
+service EventService {
+  rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse);
+}

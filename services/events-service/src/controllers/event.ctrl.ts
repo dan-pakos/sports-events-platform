@@ -1,24 +1,49 @@
 import { z } from "zod";
-import { PrismaClient } from "./../generated/prisma/index.ts";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "./../generated/prisma/index.js";
 import { Event } from "./../models/Event.ts";
 import { SportId, CompetitorId } from "./../models/types.ts";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
+});
+
+const prisma = new PrismaClient({ adapter });
 
 const createEventSchema = z.object({
-  sport_id: z.string().uuid(),
-  start_time: z.string().datetime({ offset: true }),
+  sport_id: z.uuid(),
+  start_time: z.iso.datetime({
+    offset: true,
+  }),
   timezone: z.string().min(1),
   participants: z
     .array(
       z.object({
-        competitor_id: z.string().uuid(),
+        competitor_id: z.uuid(),
       }),
     )
     .min(2, "Must have at least 2 participants"),
 });
 
-export const CreateEvent = async (request: any): Promise<any> => {
+export type CreateEventRequest = z.infer<typeof createEventSchema>;
+
+interface CreateEventSuccess {
+  success: true;
+  event_id: string;
+  status: string;
+}
+
+interface CreateEventFailure {
+  success: false;
+  error: string;
+  code: string;
+}
+
+export type CreateEventResponse = CreateEventSuccess | CreateEventFailure;
+
+export const CreateEvent = async (
+  request: CreateEventRequest,
+): Promise<CreateEventResponse> => {
   try {
     // 1. Validate the raw gRPC payload
     const parsedData = createEventSchema.parse(request);
@@ -64,15 +89,18 @@ export const CreateEvent = async (request: any): Promise<any> => {
     };
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      const zodError = error as z.ZodError;
+      return {
+        success: false,
+        code: "VALIDATION_ERROR",
+        error: error.issues.map((e) => e.message).join(", "),
+      };
+    }
 
-      throw new Error(
-        `Validation Error: ${zodError.issues.map((e) => e.message).join(", ")}`,
-      );
-    }
-    if (error instanceof Error) {
-      throw new Error(`Failed to create event: ${error.message}`);
-    }
-    throw new Error("An unknown error occurred while creating the event.");
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return {
+      success: false,
+      code: "INTERNAL_ERROR",
+      error: message,
+    };
   }
 };
