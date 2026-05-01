@@ -27,7 +27,7 @@ async function startServer(app: FastifyInstance): Promise<void> {
     /**
      * Bind all defined services to the server
      */
-    addServices(server, app.config.PROTO_ROOT);
+    addServices(server, app);
 
     const address = `${app.config.APP_HOST}:${app.config.APP_PORT}`;
     const port = await new Promise<number>((resolve, reject) => {

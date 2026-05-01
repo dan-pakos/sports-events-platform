@@ -1,5 +1,4 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "./../generated/prisma/index.js";
+import type { PrismaClient } from "./../generated/prisma/index.js";
 import { Event } from "./../models/Event.ts";
 import {
   SportId,
@@ -10,72 +9,72 @@ import {
   ZodError,
 } from "@sep/contracts";
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
+export class EventController {
+  #prisma: PrismaClient;
 
-const prisma = new PrismaClient({ adapter });
+  constructor(prisma: PrismaClient) {
+    this.#prisma = prisma;
+  }
 
-export const CreateEvent = async (
-  request: CreateEventRequest,
-): Promise<CreateEventResponse> => {
-  try {
-    // 1. Validate the raw gRPC payload
-    const parsedData = createEventSchema.parse(request);
+  async create(request: CreateEventRequest): Promise<CreateEventResponse> {
+    try {
+      // 1. Validate the raw gRPC payload
+      const parsedData = createEventSchema.parse(request);
 
-    // 2. Map Zod data to strict types
-    const sportId = parsedData.sport_id as SportId;
-    const startTime = new Date(parsedData.start_time);
-    const timezone = parsedData.timezone;
-    const participants = parsedData.participants.map((p) => ({
-      competitorId: p.competitor_id as CompetitorId,
-    }));
+      // 2. Map Zod data to strict types
+      const sportId = parsedData.sport_id as SportId;
+      const startTime = new Date(parsedData.start_time);
+      const timezone = parsedData.timezone;
+      const participants = parsedData.participants.map((p) => ({
+        competitorId: p.competitor_id as CompetitorId,
+      }));
 
-    // 3. Model Execution (Business Constarins)
-    const validNewEventData = Event.prepareNew(
-      sportId,
-      startTime,
-      timezone,
-      participants,
-    );
+      // 3. Model Execution (Business Constarins)
+      const validNewEventData = Event.prepareNew(
+        sportId,
+        startTime,
+        timezone,
+        participants,
+      );
 
-    // 4. Insertion to DB (Prisma)
-    const insertedEvent = await prisma.event.create({
-      data: {
-        sportId: validNewEventData.sportId,
-        startTime: validNewEventData.startTime,
-        timezone: validNewEventData.timezone,
-        status: validNewEventData.status,
-        metadata: validNewEventData.metadata,
-        participants: {
-          create: validNewEventData.participants.map((p) => ({
-            competitor: {
-              connect: { id: p.competitorId as string },
-            },
-          })),
+      // 4. Insertion to DB (Prisma)
+      const insertedEvent = await this.#prisma.event.create({
+        data: {
+          sportId: validNewEventData.sportId,
+          startTime: validNewEventData.startTime,
+          timezone: validNewEventData.timezone,
+          status: validNewEventData.status,
+          metadata: validNewEventData.metadata,
+          participants: {
+            create: validNewEventData.participants.map((p) => ({
+              competitor: {
+                connect: { id: p.competitorId as string },
+              },
+            })),
+          },
         },
-      },
-    });
+      });
 
-    return {
-      success: true,
-      event_id: insertedEvent.id,
-      status: insertedEvent.status,
-    };
-  } catch (error: unknown) {
-    if (error instanceof ZodError) {
+      return {
+        success: true,
+        event_id: insertedEvent.id,
+        status: insertedEvent.status,
+      };
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
+        return {
+          success: false,
+          code: "VALIDATION_ERROR",
+          error: error.issues.map((e) => e.message).join(", "),
+        };
+      }
+
+      const message = error instanceof Error ? error.message : "Unknown error";
       return {
         success: false,
-        code: "VALIDATION_ERROR",
-        error: error.issues.map((e) => e.message).join(", "),
+        code: "INTERNAL_ERROR",
+        error: message,
       };
     }
-
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return {
-      success: false,
-      code: "INTERNAL_ERROR",
-      error: message,
-    };
   }
-};
+}

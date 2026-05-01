@@ -26,6 +26,7 @@
     "@sep/fastify-logger": "workspace:*",
     "@sep/proto": "workspace:*",
     "fastify": "^5.8.5",
+    "fastify-plugin": "^5.1.0",
     "pg": "^8.20.0",
     "pino": "^9.0.0"
   },
@@ -34,6 +35,7 @@
     "@sep/eslint-config": "workspace:*",
     "@sep/tsconfig": "workspace:*",
     "@types/node": "^20.19.39",
+    "@types/pg": "^8.20.0",
     "eslint": "^10.2.1",
     "nodemon": "^3.1.14",
     "prisma": "^7.8.0",

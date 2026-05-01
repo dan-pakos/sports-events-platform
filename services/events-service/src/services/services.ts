@@ -1,11 +1,12 @@
 import { Server } from "@grpc/grpc-js";
 import EventsService from "./events.service.ts";
+import type { FastifyInstance } from "./../app.ts";
 
-export const addServices = (server: Server, protoRoot: string): void => {
+export const addServices = (server: Server, app: FastifyInstance): void => {
   /**
    * Service: Events
    */
-  const eventsService = new EventsService(protoRoot);
+  const eventsService = new EventsService(app.config.PROTO_ROOT, app.prisma);
 
   server.addService(eventsService.proto.events.EventService.service, {
     createEvent: eventsService.createEvent,

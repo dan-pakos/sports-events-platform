@@ -2,6 +2,7 @@ import Fastify, { type FastifyInstance, type FastifyBaseLogger } from "fastify";
 import env from "@fastify/env";
 import schema from "./env-schema.ts";
 import { createLogger } from "@sep/fastify-logger";
+import prismaPlugin from "./drivers/prisma.plugin.ts";
 
 const logger = createLogger({
   serviceName: "sep-events-service",
@@ -17,4 +18,9 @@ const app = Fastify({
  */
 await app.register(env, { schema });
 
-export { app, FastifyInstance };
+/**
+ * Register prisma plugin
+ */
+await app.register(prismaPlugin);
+
+export { app, type FastifyInstance };

@@ -1,6 +1,7 @@
 import * as grpc from "@grpc/grpc-js";
 import Service from "./abstract/service.ts";
-import { CreateEvent } from "../controllers/event.ctrl.ts";
+import { EventController } from "../controllers/event.ctrl.ts";
+import type { PrismaClient } from "../generated/prisma/index.js";
 
 const ErrorMap: Record<string, number> = {
   VALIDATION_ERROR: grpc.status.INVALID_ARGUMENT,
@@ -9,20 +10,26 @@ const ErrorMap: Record<string, number> = {
 };
 
 export default class EventsService extends Service {
-  protoFile: string = "events.proto";
-  proto: any;
+  #protoFile: string = "events.proto";
+  #proto: any;
+  #ctrl: EventController;
 
-  constructor(protoRoot: string) {
-    super(protoRoot);
-    this.proto = this.getPackageDefinition(this.protoFile);
+  get proto() {
+    return this.#proto;
   }
 
-  async createEvent(
+  constructor(protoRoot: string, prisma: PrismaClient) {
+    super(protoRoot);
+    this.#proto = this.getPackageDefinition(this.#protoFile);
+    this.#ctrl = new EventController(prisma);
+  }
+
+  createEvent = async (
     call: grpc.ServerUnaryCall<any, any>,
     callback: grpc.sendUnaryData<any>,
-  ) {
+  ) => {
     try {
-      const result = await CreateEvent(call.request);
+      const result = await this.#ctrl.create(call.request);
 
       if (!result.success) {
         callback({
@@ -42,5 +49,5 @@ export default class EventsService extends Service {
         details: message,
       });
     }
-  }
+  };
 }
