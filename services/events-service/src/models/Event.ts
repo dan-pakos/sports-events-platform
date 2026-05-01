@@ -1,4 +1,4 @@
-import { EventId, SportId, EventStatus, CompetitorId } from "./types.ts";
+import { EventId, EventStatus, SportId, CompetitorId } from "@sep/contracts";
 
 export interface Participant {
   competitorId: CompetitorId;

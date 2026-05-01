@@ -1,45 +1,20 @@
-import { z } from "zod";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "./../generated/prisma/index.js";
 import { Event } from "./../models/Event.ts";
-import { SportId, CompetitorId } from "./../models/types.ts";
+import {
+  SportId,
+  CompetitorId,
+  createEventSchema,
+  CreateEventRequest,
+  CreateEventResponse,
+  ZodError,
+} from "@sep/contracts";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
 });
 
 const prisma = new PrismaClient({ adapter });
-
-const createEventSchema = z.object({
-  sport_id: z.uuid(),
-  start_time: z.iso.datetime({
-    offset: true,
-  }),
-  timezone: z.string().min(1),
-  participants: z
-    .array(
-      z.object({
-        competitor_id: z.uuid(),
-      }),
-    )
-    .min(2, "Must have at least 2 participants"),
-});
-
-export type CreateEventRequest = z.infer<typeof createEventSchema>;
-
-interface CreateEventSuccess {
-  success: true;
-  event_id: string;
-  status: string;
-}
-
-interface CreateEventFailure {
-  success: false;
-  error: string;
-  code: string;
-}
-
-export type CreateEventResponse = CreateEventSuccess | CreateEventFailure;
 
 export const CreateEvent = async (
   request: CreateEventRequest,
@@ -88,7 +63,7 @@ export const CreateEvent = async (
       status: insertedEvent.status,
     };
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       return {
         success: false,
         code: "VALIDATION_ERROR",

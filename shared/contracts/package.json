@@ -1,0 +1,20 @@
+{
+  "name": "@sep/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --clean --minify --dts"
+  },
+  "dependencies": {
+    "zod": "^4.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.39",
+    "@sep/tsconfig": "workspace:*",
+    "tsup": "^8.3.0",
+    "typescript": "^5.0.0"
+  }
+}

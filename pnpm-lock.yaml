@@ -72,10 +72,10 @@ importers:
       pino:
         specifier: ^9.0.0
         version: 9.14.0
-      zod:
-        specifier: ^4.4.1
-        version: 4.4.1
     devDependencies:
+      '@sep/contracts':
+        specifier: workspace:*
+        version: link:../../shared/contracts
       '@sep/eslint-config':
         specifier: workspace:*
         version: link:../../shared/configs/eslint-config
@@ -123,6 +123,25 @@ importers:
         version: 8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
 
   shared/configs/tsconfig-node: {}
+
+  shared/contracts:
+    dependencies:
+      zod:
+        specifier: ^4.4.1
+        version: 4.4.1
+    devDependencies:
+      '@sep/tsconfig':
+        specifier: workspace:*
+        version: link:../configs/tsconfig-node
+      '@types/node':
+        specifier: ^20.19.39
+        version: 20.19.39
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(jiti@2.6.1)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
 
   shared/proto: {}
 
