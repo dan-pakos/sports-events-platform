@@ -1,6 +1,6 @@
 packages:
-  - "configs/*"
-  - "packages/*"
+  - "shared/**"
+  - "packages/**"
   - "services/**"
   - "web/**"
   - "!**/test/**"
