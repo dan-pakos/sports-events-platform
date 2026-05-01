@@ -4,6 +4,7 @@ import { app, type FastifyInstance } from "./app.ts";
 import { getCredentials } from "./server-credentials.ts";
 import { addServices } from "./services/services.ts";
 
+// start server async
 await startServer(app);
 
 /**
@@ -29,6 +30,7 @@ async function startServer(app: FastifyInstance): Promise<void> {
      */
     addServices(server, app);
 
+    // init server
     const address = `${app.config.APP_HOST}:${app.config.APP_PORT}`;
     const port = await new Promise<number>((resolve, reject) => {
       server.bindAsync(address, credentials, (err, p) => {

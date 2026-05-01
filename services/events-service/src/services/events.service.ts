@@ -9,6 +9,9 @@ const ErrorMap: Record<string, number> = {
   INTERNAL_ERROR: grpc.status.INTERNAL,
 };
 
+/**
+ * Class representing gRPC Events Service
+ */
 export default class EventsService extends Service {
   #protoFile: string = "events.proto";
   #proto: any;
@@ -20,15 +23,21 @@ export default class EventsService extends Service {
 
   constructor(protoRoot: string, prisma: PrismaClient) {
     super(protoRoot);
-    this.#proto = this.getPackageDefinition(this.#protoFile);
+    this.#proto = this.getPackageDefinition(this.#protoFile); // load proto file
     this.#ctrl = new EventController(prisma);
   }
 
+  /**
+   * Public async method for handling gRPC create new event request
+   * @param call
+   * @param callback
+   */
   createEvent = async (
     call: grpc.ServerUnaryCall<any, any>,
     callback: grpc.sendUnaryData<any>,
   ) => {
     try {
+      // process request via controller
       const result = await this.#ctrl.create(call.request);
 
       if (!result.success) {

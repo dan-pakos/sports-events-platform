@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export { ZodError, type ZodIssue } from "zod";
 
+// shared schema for validating request for creating new event
 export const createEventSchema = z.object({
   sport_id: z.uuid(),
   start_time: z.iso.datetime({

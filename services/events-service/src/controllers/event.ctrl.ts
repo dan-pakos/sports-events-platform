@@ -9,6 +9,11 @@ import {
   ZodError,
 } from "@sep/contracts";
 
+/**
+ * Class representing Event Controller
+ * A controller responsible for business actions
+ *
+ */
 export class EventController {
   #prisma: PrismaClient;
 
@@ -16,6 +21,11 @@ export class EventController {
     this.#prisma = prisma;
   }
 
+  /**
+   * Public async method for creating new event
+   * @param request
+   * @returns
+   */
   async create(request: CreateEventRequest): Promise<CreateEventResponse> {
     try {
       // 1. Validate the raw gRPC payload
