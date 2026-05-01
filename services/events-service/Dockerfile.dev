@@ -37,11 +37,6 @@ COPY --from=pruner /var/web/out/pnpm-lock.yaml .
 
 RUN pnpm install --frozen-lockfile
 
-COPY --from=pruner /var/web/services/events-service/prisma ./services/events-service/prisma
-RUN pnpm --filter=@sep/events-service exec prisma generate
-
-# COPY --from=pruner /var/web/out/full/shared/proto ./shared/proto
-
 # BUILDER
 FROM base AS builder
 
@@ -50,6 +45,8 @@ WORKDIR /var/web
 # Build the project
 COPY --from=installer /var/web .
 COPY --from=pruner /var/web/out/full/ .
+
+RUN pnpm --filter=@sep/events-service exec prisma generate
 
 RUN turbo run build --filter="@sep/events-service"
 

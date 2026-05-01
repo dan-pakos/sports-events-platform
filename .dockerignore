@@ -6,3 +6,4 @@ dist
 npm-debug.log
 docker-compose.yml
 .env*
+generated/prisma

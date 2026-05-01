@@ -84,8 +84,11 @@ async function main() {
   // Event 1: Football Match
   await prisma.event.create({
     data: {
+      name: "Salzburg vs Sturm",
       startTime: new Date("2026-07-18T18:30:00Z"),
+      timezone: "Europe/Vienna",
       sportId: football.id,
+      status: "SCHEDULED",
       participants: {
         create: [
           { competitorId: salzburg.id, role: "HOME" },
@@ -98,8 +101,11 @@ async function main() {
   // Event 2: Ice Hockey Match
   await prisma.event.create({
     data: {
+      name: "KAC vs Capitals",
       startTime: new Date("2026-10-23T09:45:00Z"),
+      timezone: "Europe/Vienna",
       sportId: hockey.id,
+      status: "SCHEDULED",
       participants: {
         create: [
           { competitorId: kac.id, role: "HOME" },
@@ -112,8 +118,11 @@ async function main() {
   // Event 3: Tennis Match
   await prisma.event.create({
     data: {
+      name: "Hailey Baptistea vs Mirra Andreeva",
       startTime: new Date("2026-11-13T08:00:00Z"),
+      timezone: "America/New_York",
       sportId: tennis.id,
+      status: "SCHEDULED",
       participants: {
         create: [
           { competitorId: hailey.id, role: "HOME" },
