@@ -14,4 +14,4 @@ By utilizing binary Protocol Buffers (gRPC) for communication, it provides the p
 
 **Domain Validation:** Enforces business rules and constraints during the event creation process.
 
-**Shared Logic:**s Uses a unified contract system (@sep/contracts) to keep validation schemas consistent.
+**Shared Logic:** Uses a unified contract system (@sep/contracts) to keep validation schemas consistent.
