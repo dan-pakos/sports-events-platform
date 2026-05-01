@@ -7,11 +7,39 @@ Events represent competitive sports matches and may evolve over time.
 
 ### Overview
 
+The architecture has been designed to strictly separate external access from internal data processing, ensuring that every layer validates, authenticates data before it goes to the database.
+
 ![architecture-containers](/docs/architecture-containers.jpg)
+
+The system flavors a SOA model where public-facing APIs (like the Events Admin REST API) act as the first line of defense - routing sanitized requests by strict schema validation via highly performant internal gRPC channels to isolated (under private network) backend Events Service that connects to the database.
+
+1. Entry-Point Security (The REST APIs layer)
+
+   **Strict Payload Validation:** All incoming requests to the Events Admin REST API and Events WebApp REST API are validated via build-in Fastify request schema validator, then via shared Zod schemas. If a payload contains unexpected data or wrong types, the request is dropped before it hits the business logic.
+
+2. Internal Transport Security (The Service Layer)
+
+   **Binary gRPC Communication:** Internal microservices communicate strictly via gRPC. Because it uses binary Protocol Buffers instead of plaintext JSON, it is much more secure to injection attacks and payload tampering during transit.
+
+   **Immutable Contracts:** Both the clients (Events Admin REST API and Events WebApp REST API) and the server (Events Service) rely on the same `@sep/contracts` package. A service cannot send or receive data that are different from the predefined .proto definitions.
+
+3. Data Security (The Database Layer)
+
+   **Isolated Database Access:** The database is completely hidden from the outside world. Only specific backend microservices (Events Service) holds the database credentials.
+
+   **UUID Primary Keys:** Using randomly generated UUIDs across all models (Sports, Competitors, Events) prevents ID Enumeration Attacks.
+
+   **Query Safety:** Prisma ORM automatically parametrizes all database queries, neutralizing SQL injection risk.
+
+4. Code-Level Security (The Application Layer)
+
+   **Strict Encapsulation:** The use of native JavaScript private fields (#) for service classes prevents context leaks or unauthorized property injection during runtime.
 
 ### Future Scalability Roadmap
 
 To handle high traffic and ensure system reliability, the infrastructure could evolve into a high-availability architecture focused on data accesability and latency reduction.
+
+![architecture-containers](/docs/architecture-containers-scaling.jpg)
 
 1. Redis Caching Layer
 
@@ -22,13 +50,11 @@ To handle high traffic and ensure system reliability, the infrastructure could e
 
 2. Primary-Replica Database Architecture
 
-To scale database operations, the PostgreSQL infractructure will turn from a single instance to a Primary/Replica configuration.
+   To scale database operations, the PostgreSQL infractructure will turn from a single instance to a Primary/Replica configuration.
 
-Write Operations (Primary): All data modifications (creating, updating, deleting events) from **Events Admin REST API** will be handled by the Primary Database to ensure security, compliance and performance.
+   Write Operations (Primary): All data modifications (creating, updating, deleting events) from **Events Admin REST API** will be handled by the Primary Database to ensure security, compliance and performance.
 
-Read Operations (Replicas): Read traffic (fetching events lists, sports, etc) from **Events WebApp REST API** will be provided from multiple Read Replicas.
-
-![architecture-containers](/docs/architecture-containers-scaling.jpg)
+   Read Operations (Replicas): Read traffic (fetching events lists, sports, etc) from **Events WebApp REST API** will be provided from multiple Read Replicas.
 
 ### Services
 
