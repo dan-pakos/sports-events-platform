@@ -2,15 +2,16 @@ syntax = "proto3";
 
 package events;
 
-message Participant {
+message CreateEventParticipant {
   string competitor_id = 1;
+  string role = 2;
 }
 
 message CreateEventRequest {
   string sport_id = 1;
   string start_time = 2;
   string venue_timezone = 3;
-  repeated Participant participants = 4;
+  repeated CreateEventParticipant participants = 4;
 }
 
 message CreateEventResponse {

@@ -4,7 +4,7 @@ import Client, { type Certificates } from "./abstract/client.ts";
 /**
  * Class representing gRPC Clients Factory
  */
-export default class Clients extends Client {
+export default class GrpcClient extends Client {
   #proto: any;
   #credentials: ChannelCredentials;
   #serviceUrl: string;

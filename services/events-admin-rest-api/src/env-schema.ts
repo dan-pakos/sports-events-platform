@@ -8,6 +8,10 @@ const schema = {
     LOG_CLOUDWATCH_GROUP: { type: "string" },
     LOG_CLOUDWATCH_REGION: { type: "string" },
     PROTO_ROOT: { type: "string", default: "/var/web/shared/proto" },
+    EVENTS_SERVICE_URL: { type: "string" },
+    CA_PATH: { type: "string" },
+    CERT_PATH: { type: "string" },
+    KEY_PATH: { type: "string" },
   },
 };
 
@@ -20,6 +24,10 @@ declare module "fastify" {
       LOG_CLOUDWATCH_GROUP: string;
       LOG_CLOUDWATCH_REGION: string;
       PROTO_ROOT: string;
+      EVENTS_SERVICE_URL: string;
+      CA_PATH: string;
+      CERT_PATH: string;
+      KEY_PATH: string;
     };
   }
 }
