@@ -9,7 +9,25 @@ export const createEventMethod = (app: FastifyInstance) => {
     {
       schema: {
         description: "Create a new sports event",
+        tags: ["Events"],
         body: createEventSchema,
+        examples: [
+          {
+            sport_id: "55555555-5555-5555-5555-555555555555",
+            start_time: "2026-05-15T20:00:00Z",
+            timezone: "Europe/Warsaw",
+            participants: [
+              {
+                competitor_id: "11111111-1111-1111-1111-111111111111",
+                role: "TEAM",
+              },
+              {
+                competitor_id: "22222222-2222-2222-2222-222222222222",
+                role: "TEAM",
+              },
+            ],
+          },
+        ],
         response: {
           201: z.object({
             id: z.uuid(),

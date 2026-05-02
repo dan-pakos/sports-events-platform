@@ -13,10 +13,13 @@ import { createLogger } from "@sep/fastify-logger";
 
 import fastifyCors from "@fastify/cors";
 import fastifyAutoLoad from "@fastify/autoload";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
 
 import {
   serializerCompiler,
   validatorCompiler,
+  jsonSchemaTransform,
 } from "fastify-type-provider-zod";
 
 import grpcEventsClientPlugin from "./grpc/events/grpc-events-plugin.ts";
@@ -59,6 +62,39 @@ app.setSerializerCompiler(serializerCompiler);
  * Register cors plugin
  */
 await app.register(fastifyCors);
+
+/**
+ * Register Swagger plugin
+ */
+await app.register(fastifySwagger, {
+  mode: "dynamic",
+  openapi: {
+    openapi: "3.0.0",
+    info: {
+      title: "Events Admin REST API",
+      description: "API Gateway for managing sporting events",
+      version: "1.0.0",
+    },
+    servers: [],
+  },
+  transform: (opts) => {
+    const transformed = jsonSchemaTransform(opts);
+    const rawSchema = opts.schema as any;
+
+    if (rawSchema?.examples?.length > 0 && transformed.schema?.body) {
+      (transformed.schema.body as any).example = rawSchema.examples[0];
+    }
+
+    return transformed;
+  },
+});
+
+/**
+ * Register Swagger UI plugin
+ */
+await app.register(fastifySwaggerUi, {
+  routePrefix: "documentation", // TODO: move to env vars
+});
 
 /**
  * Register API routes
