@@ -42,7 +42,7 @@ export default class EventsService extends Service {
 
       if (!result.success) {
         callback({
-          code: ErrorMap[result.code] || grpc.status.UNKNOWN,
+          code: result.code ? ErrorMap[result.code] : grpc.status.UNKNOWN,
           details: result.error,
         });
       } else {
