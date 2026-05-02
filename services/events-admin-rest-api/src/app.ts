@@ -13,6 +13,11 @@ import { createLogger } from "@sep/fastify-logger";
 import fastifyCors from "@fastify/cors";
 import fastifyAutoLoad from "@fastify/autoload";
 
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from "fastify-type-provider-zod";
+
 /**
  * Create dedicated logger for event service
  */
@@ -30,6 +35,12 @@ const app = Fastify({
  * Register env Plugin. Imporant: must be registered as first
  */
 await app.register(env, { schema });
+
+/**
+ * Add schema validator and serializer
+ */
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
 
 /**
  * Register cors plugin

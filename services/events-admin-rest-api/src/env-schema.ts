@@ -17,7 +17,6 @@ declare module "fastify" {
       NODE_ENV: "development" | "production" | "test";
       APP_HOST: string;
       APP_PORT: string;
-      CA_PATH: string;
       LOG_CLOUDWATCH_GROUP: string;
       LOG_CLOUDWATCH_REGION: string;
       PROTO_ROOT: string;
