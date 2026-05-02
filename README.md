@@ -11,7 +11,34 @@ The architecture has been designed to strictly separate external access from int
 
 ![architecture-containers](/docs/architecture-containers.jpg)
 
-The system flavors a SOA model where public-facing APIs (like the Events Admin REST API) act as the first line of defense - routing sanitized requests by strict schema validation via highly performant internal gRPC channels to isolated (under private network) backend Events Service that connects to the database.
+### Domain-Driven Design
+
+**Core Domain Entities**
+
+1. Sport - The main category. It enforce rules for assotiated entities.
+2. Competitor - An actor participating in a sport (Team, Individual). It can be associated once for a single event.
+3. Event - A single instance of a competition. It owns schedule and status.
+4. Event Participant - It shows how participant is involved in an Event (e.g. Role: HOME, AWAY, POSITION_1).
+5. Admin User - The internal staff member authorized to manage the platform data.
+6. Public Consumer - A service authorised to read the platform data.
+
+**Domain Boundaries**
+
+1. Sports Catalog
+   - Entities: Sport, Competitor
+   - Characteristics: High read volume, very low write volume. Changes very rarely.
+
+2. Events Calendar
+   - Entities: Event, EventParticipant
+   - Characteristics: High read volume, moderate write volume. Changes frequently the `status` in an Event lifecycle.
+
+3. Identity & Access Management (IAM)
+   - Entities: Admin User, Public Consumer
+   - Characteristics: Securing the platform. It lives in APIs layer. Handles authentication (login) and authorization (manages who can add or delete an Event)
+
+### Security layer
+
+The system flavors a SOA model where public-facing APIs (like the Events Admin REST API) act as the first line of defense - routing sanitized requests by strict schema validation via highly performant internal gRPC channels to isolated (behind private network) backend Events Service that connects to the database.
 
 1. Entry-Point Security (The REST APIs layer)
 
@@ -69,7 +96,7 @@ The core gRPC microservice responsible for the lifecycle and persistence of spor
 
 ##### Overview
 
-The database is designed as a relational PostgreSQL schema, optimized for sports data consistency and high-speed querying. It utilizes a normalized structure to handle the relationships between sports, competing entities, and the events they participate in. Database chema has been designed to handle multiple sport types:
+The database is designed as a relational PostgreSQL schema, optimized for sports data consistency and high-speed querying. It utilizes a normalized structure to handle the relationships between sports, competing entities, and the events they participate in. Database schema has been designed to handle multiple sport types:
 
 1. Team vs. Team – Football, Ice Hockey, Basketball, etc.
 2. Individual vs. Individual – Tennis, Golf, etc.
@@ -99,15 +126,13 @@ It exposes REST API for **Events WebApp**
 
 Located: `services/events-webapp-rest-api`
 
-### Web Apps
-
 #### Events WebApp
 
-A future Web Application to present sports events to a public audience.
+The future Web Application to present sports events to a public audience.
 
 #### Events Admin
 
-A future Web Application to allow manage events by an Admin.
+The future Web Application to allow manage events by an Admin.
 
 ### Shared resources
 
