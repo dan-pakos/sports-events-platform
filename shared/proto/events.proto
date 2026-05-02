@@ -21,6 +21,6 @@ message CreateEventResponse {
   string error = 4;
 }
 
-service EventService {
+service EventsService {
   rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse);
 }
