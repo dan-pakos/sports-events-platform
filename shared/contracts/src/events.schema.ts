@@ -13,6 +13,7 @@ export const createEventSchema = z.object({
     .array(
       z.object({
         competitor_id: z.uuid(),
+        role: z.string(),
       }),
     )
     .min(2),
