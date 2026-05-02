@@ -24,6 +24,7 @@
     "@grpc/grpc-js": "^1.14.3",
     "@sep/contracts": "workspace:*",
     "@sep/fastify-logger": "workspace:*",
+    "@sep/grpc-client": "workspace:*",
     "@sep/proto": "workspace:*",
     "fastify": "^5.8.5",
     "fastify-plugin": "^5.1.0",

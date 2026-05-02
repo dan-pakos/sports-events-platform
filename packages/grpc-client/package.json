@@ -1,0 +1,25 @@
+{
+  "name": "@sep/grpc-client",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts --format esm --clean --minify --dts",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.3",
+    "@grpc/proto-loader": "^0.8.0",
+    "fastify-plugin": "^5.1.0"
+  },
+  "devDependencies": {
+    "@sep/tsconfig": "workspace:*",
+    "@types/node": "^20.19.39",
+    "eslint": "^10.2.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
