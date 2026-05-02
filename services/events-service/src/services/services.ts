@@ -11,7 +11,7 @@ export const addServices = (server: Server, app: FastifyInstance): void => {
   // Service: Events
   const eventsService = new EventsService(app.config.PROTO_ROOT, app.prisma);
 
-  server.addService(eventsService.proto.events.EventService.service, {
+  server.addService(eventsService.proto.events.EventsService.service, {
     createEvent: eventsService.createEvent,
   });
 };
