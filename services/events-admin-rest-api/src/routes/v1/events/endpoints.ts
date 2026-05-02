@@ -19,8 +19,16 @@ const EventsRoutes: FastifyPluginAsyncZod = async (app) => {
             message: z.string(),
           }),
           400: z.object({
-            error: z.string(),
-            code: z.string(),
+            message: z.string(),
+            errors: z.array(
+              z.object({
+                field: z.string(),
+                message: z.string(),
+              }),
+            ),
+          }),
+          500: z.object({
+            message: z.string(),
           }),
         },
       },
@@ -31,9 +39,15 @@ const EventsRoutes: FastifyPluginAsyncZod = async (app) => {
       const response = await app.grpcClients.events.createEvent(payload);
 
       if (!response.success) {
-        return reply.code(400).send({
-          error: response.error,
-          code: response.code,
+        /**
+         * We don't want to expose backend gRPC errors as client response
+         */
+        app.log.error(
+          `Backend Service Error (${response.code}): ${response.message}`,
+        );
+
+        return reply.code(500).send({
+          message: "Backend Service Error",
         });
       }
 

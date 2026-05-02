@@ -10,7 +10,7 @@ message CreateEventParticipant {
 message CreateEventRequest {
   string sport_id = 1;
   string start_time = 2;
-  string venue_timezone = 3;
+  string timezone = 3;
   repeated CreateEventParticipant participants = 4;
 }
 

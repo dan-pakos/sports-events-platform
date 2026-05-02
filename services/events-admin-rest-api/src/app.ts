@@ -6,6 +6,7 @@ import Fastify, {
   type FastifyBaseLogger,
 } from "fastify";
 
+import { setupErrorHandler } from "./utils/error-handler.ts";
 import env from "@fastify/env";
 import schema from "./env-schema.ts";
 import { createLogger } from "@sep/fastify-logger";
@@ -32,6 +33,11 @@ const logger = createLogger({
 const app = Fastify({
   loggerInstance: logger as FastifyBaseLogger,
 });
+
+/**
+ * Setup error handler
+ */
+setupErrorHandler(app);
 
 /**
  * Register env Plugin. Imporant: must be registered as first
