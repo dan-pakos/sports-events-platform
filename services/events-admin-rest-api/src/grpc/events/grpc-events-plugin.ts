@@ -34,10 +34,7 @@ const grpcEventsClientPlugin = fp(async (app) => {
     protoFileName,
   );
 
-  const grpcEventsClient = grpcClient.create(
-    `events.EventsService`,
-    `EventsService`,
-  );
+  const grpcEventsClient = grpcClient.create(`events`, `EventService`);
 
   app.decorate("grpcClients", {
     events: new EventsClientWrapper(grpcEventsClient),

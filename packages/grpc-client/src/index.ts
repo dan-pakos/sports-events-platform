@@ -31,6 +31,7 @@ export default class GrpcClient extends Client {
   create(packagePath: string, serviceName: string) {
     // Safely objectify packagePath
     let packageObj = this.#proto;
+    console.log(`packageObj`, packageObj);
     for (const key of packagePath.split(".")) {
       packageObj = packageObj?.[key];
     }
