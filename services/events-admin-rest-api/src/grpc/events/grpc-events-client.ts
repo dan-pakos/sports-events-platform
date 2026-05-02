@@ -1,26 +1,31 @@
-import type {
-  EventsServiceClientGrpc,
-  CreateEventRequestGrpc,
-  CreateEventResponseGrpc,
-} from "@sep/contracts";
+import type { Client, ServiceError, ClientUnaryCall } from "@grpc/grpc-js";
+import type { CreateEventRequest, CreateEventResponse } from "@sep/contracts";
+
+export interface EventsServiceClient extends Client {
+  CreateEvent(
+    request: CreateEventRequest,
+    callback: (
+      error: ServiceError | null,
+      response: CreateEventResponse,
+    ) => void,
+  ): ClientUnaryCall;
+}
 
 /**
  * Class representing Events Service from gPRC Events Service
  */
 export class EventsClientWrapper {
-  #client: EventsServiceClientGrpc;
+  #client: EventsServiceClient;
 
-  constructor(client: EventsServiceClientGrpc) {
+  constructor(client: EventsServiceClient) {
     this.#client = client;
   }
 
-  async createEvent(
-    data: CreateEventRequestGrpc,
-  ): Promise<CreateEventResponseGrpc> {
+  async createEvent(data: CreateEventRequest): Promise<CreateEventResponse> {
     return await this.#invoke("CreateEvent", data);
   }
 
-  async #invoke<K extends keyof EventsServiceClientGrpc, TResponse>(
+  async #invoke<K extends keyof EventsServiceClient, TResponse>(
     methodName: K,
     data: unknown,
   ): Promise<TResponse> {

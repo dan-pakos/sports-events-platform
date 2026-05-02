@@ -21,7 +21,6 @@
     "@fastify/autoload": "^6.3.1",
     "@fastify/cors": "^11.2.0",
     "@fastify/env": "^6.0.0",
-    "@grpc/grpc-js": "^1.14.3",
     "@sep/contracts": "workspace:*",
     "@sep/fastify-logger": "workspace:*",
     "@sep/grpc-client": "workspace:*",
@@ -33,6 +32,7 @@
     "zod": "^4.4.1"
   },
   "devDependencies": {
+    "@grpc/grpc-js": "^1.14.3",
     "@sep/eslint-config": "workspace:*",
     "@sep/tsconfig": "workspace:*",
     "@types/node": "^20.19.39",

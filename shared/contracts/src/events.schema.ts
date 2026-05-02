@@ -21,16 +21,9 @@ export const createEventSchema = z.object({
 // Infer the TypeScript type from the Zod schema
 export type CreateEventRequest = z.infer<typeof createEventSchema>;
 
-export type CreateEventResponse = CreateEventSuccess | CreateEventFailure;
-
-interface CreateEventSuccess {
-  success: true;
-  event_id: string;
-  status: string;
-}
-
-interface CreateEventFailure {
-  success: false;
-  error: string;
-  code: string;
-}
+export type CreateEventResponse = {
+  success: boolean;
+  event_id?: string;
+  code?: string;
+  error?: string;
+};

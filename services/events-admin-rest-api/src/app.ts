@@ -18,6 +18,8 @@ import {
   validatorCompiler,
 } from "fastify-type-provider-zod";
 
+import grpcEventsClientPlugin from "./grpc/events/grpc-events-plugin.ts";
+
 /**
  * Create dedicated logger for event service
  */
@@ -35,6 +37,11 @@ const app = Fastify({
  * Register env Plugin. Imporant: must be registered as first
  */
 await app.register(env, { schema });
+
+/**
+ * Register grpcEventsClientPlugin
+ */
+await app.register(grpcEventsClientPlugin);
 
 /**
  * Add schema validator and serializer

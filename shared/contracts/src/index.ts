@@ -6,6 +6,3 @@ export * from "./enums.js";
 
 // Export Zod Schemas and Types
 export * from "./events.schema.js";
-
-// Export gRPC Mapped Types
-export * from "./events.grpc.js";

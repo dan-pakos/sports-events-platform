@@ -68,7 +68,6 @@ export class EventController {
       return {
         success: true,
         event_id: insertedEvent.id,
-        status: insertedEvent.status,
       };
     } catch (error: unknown) {
       if (error instanceof ZodError) {
