@@ -1,14 +1,21 @@
 import { type PrismaClient, Prisma } from "./../generated/prisma/index.js";
 import { Event } from "./../models/Event.ts";
+import { ZodError } from "@sep/contracts";
 import {
   EventId,
   SportId,
   CompetitorId,
   createEventSchema,
   CreateEventRequest,
-  CreateEventResponse,
   DeleteEventRequest,
 } from "@sep/contracts";
+
+type CreateEventResult = {
+  success: boolean;
+  event_id?: string;
+  code?: string;
+  error?: string;
+};
 
 type DeleteEventResult = {
   success: boolean;
@@ -33,7 +40,7 @@ export class EventController {
    * @param request
    * @returns
    */
-  async create(request: CreateEventRequest): Promise<CreateEventResponse> {
+  async create(request: CreateEventRequest): Promise<CreateEventResult> {
     try {
       // 1. Validate the raw gRPC payload
       const parsedData = createEventSchema.parse(request);
@@ -81,12 +88,16 @@ export class EventController {
         event_id: insertedEvent.id,
       };
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Unknown error";
-      return {
-        success: false,
-        code: "INTERNAL_ERROR",
-        error: message,
-      };
+      if (error instanceof ZodError) {
+        return {
+          success: false,
+          code: "VALIDATION_ERROR",
+          error: error.issues.map((e) => e.message).join(", "),
+        };
+      }
+
+      // generic error
+      throw error;
     }
   }
 

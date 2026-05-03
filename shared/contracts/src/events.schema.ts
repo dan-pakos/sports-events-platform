@@ -47,10 +47,7 @@ export const createEventSchema = z.object({
 export type CreateEventRequest = z.infer<typeof createEventSchema>;
 
 export type CreateEventResponse = {
-  success: boolean;
   event_id?: string;
-  code?: string;
-  error?: string;
 };
 
 // DELETE

@@ -21,10 +21,7 @@ message DeleteEventRequest {
 message DeleteEventResponse {}
 
 message CreateEventResponse {
-  bool success = 1;
-  string event_id = 2;
-  string code = 3;
-  string error = 4;
+  string event_id = 1;
 }
 
 service EventsService {

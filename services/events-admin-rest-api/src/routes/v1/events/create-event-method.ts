@@ -51,25 +51,28 @@ export const createEventMethod = (app: FastifyInstance) => {
     async (request, reply) => {
       const payload = request.body as CreateEventRequest;
 
-      const response = await app.grpcClients.events.createEvent(payload);
+      try {
+        const response = await app.grpcClients.events.createEvent(payload);
 
-      if (!response.success) {
-        /**
-         * We don't want to expose backend gRPC errors as client response
-         */
-        app.log.error(
-          `Backend Service Error (${response.code}): ${response.message}`,
-        );
+        return reply.code(201).send({
+          id: response.event_id,
+          message: "Event has been created successfully",
+        });
+      } catch (error) {
+        const grpcError = error as Error & { code?: number };
+        // NOTE: 13 code in gRPC is INVALIDATION_ERROR
+        // TODO: Move to shared error type
+        if (grpcError.code === 13) {
+          // TODO: handle mapping of invalidation errors
+        }
+
+        // We don't want to expose other errors as API response, so log instead and return generic error
+        app.log.error(error);
 
         return reply.code(500).send({
-          message: "Backend Service Error",
+          message: "Internal Server Error",
         });
       }
-
-      return reply.code(201).send({
-        id: response.event_id,
-        message: "Event has been created successfully",
-      });
     },
   );
 };
