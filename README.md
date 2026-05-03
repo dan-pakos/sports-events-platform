@@ -118,6 +118,7 @@ The database is designed as a relational PostgreSQL schema, optimized for sports
 Microservice with full CRUD (Create, Read, Update, Delete) operations for sports, teams, and individual athletes. It exposes REST API for **Events Admin**
 
 Located: `services/events-admin-rest-api`
+Documentation: [README](./services/events-admin-rest-api/README.md)
 
 #### Events WebApp REST API
 
@@ -125,14 +126,15 @@ Microservice responsible for reads operations for sports events, sports, teams, 
 It exposes REST API for **Events WebApp**
 
 Located: `services/events-webapp-rest-api`
+Documentation: [README](./services/events-webapp-rest-api/README.md)
 
 #### Events WebApp
 
-The future Web Application to present sports events to a public audience.
+TODO: The future Web Application to present sports events to a public audience.
 
 #### Events Admin
 
-The future Web Application to allow manage events by an Admin.
+TODO: The future Web Application to allow manage events by an Admin.
 
 ### Shared resources
 

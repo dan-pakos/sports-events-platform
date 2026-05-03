@@ -1,6 +1,6 @@
-## Events Admin REST API
+## Events WebApp REST API
 
-The API Gateway for the sports events management system. This service provides a RESTful interface for administrators to create, manage, and delete sporting events, teams, and competitors.
+The API Gateway for the sports events catalog. This service provides a RESTful interface for public clients to retrieve sporting events, teams, and competitors.
 
 ### Overview
 
@@ -21,4 +21,4 @@ This service acts as the primary ingress point for administrative operations. It
 
 Interactive Swagger UI and the OpenAPI 3.0 specification can be accessed locally when the service is running:
 
-http://localhost:8043/documentation
+http://localhost:8053/documentation
