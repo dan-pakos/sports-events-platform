@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export { ZodError, type ZodIssue } from "zod";
 
+// CREATE
+
 // shared schema for validating request for creating new event
 export const createEventSchema = z.object({
   sport_id: z.uuid(),
@@ -47,6 +49,20 @@ export type CreateEventRequest = z.infer<typeof createEventSchema>;
 export type CreateEventResponse = {
   success: boolean;
   event_id?: string;
+  code?: string;
+  error?: string;
+};
+
+// DELETE
+
+export const deleteEventSchema = z.object({
+  event_id: z.uuid(),
+});
+
+export type DeleteEventRequest = z.infer<typeof deleteEventSchema>;
+
+export type DeleteEventResponse = {
+  success: boolean;
   code?: string;
   error?: string;
 };
