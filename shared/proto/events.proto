@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package events;
 
-message CreateEventParticipant {
+message Participant {
   string competitor_id = 1;
   string role = 2;
 }
@@ -11,7 +11,7 @@ message CreateEventRequest {
   string sport_id = 1;
   string start_time = 2;
   string timezone = 3;
-  repeated CreateEventParticipant participants = 4;
+  repeated Participant participants = 4;
 }
 
 message DeleteEventRequest {
@@ -24,7 +24,21 @@ message CreateEventResponse {
   string event_id = 1;
 }
 
+message GetEventRequest {
+  string id = 1;
+}
+
+message Event {
+  string id = 1;
+  string sport_id = 2;
+  string start_time = 3;
+  string timezone = 4;
+  string status = 5;
+  repeated Participant participants = 6;
+}
+
 service EventsService {
   rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse);
   rpc DeleteEvent (DeleteEventRequest) returns (DeleteEventResponse);
+  rpc GetEvent(GetEventRequest) returns (Event);
 }

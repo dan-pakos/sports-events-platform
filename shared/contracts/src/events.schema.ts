@@ -58,3 +58,26 @@ export const deleteEventSchema = z.object({
 
 export type DeleteEventRequest = z.infer<typeof deleteEventSchema>;
 export type DeleteEventResponse = {};
+
+// GET EVENT
+
+export const getEventSchema = z.object({
+  id: z.uuid(),
+});
+
+const participantSchema = z.object({
+  competitor_id: z.uuid(),
+  role: z.string(),
+});
+
+export const getEventResponseSchema = z.object({
+  id: z.uuid(),
+  sport_id: z.uuid(),
+  start_time: z.iso.datetime({ offset: true }),
+  timezone: z.string(),
+  status: z.string(),
+  participants: z.array(participantSchema),
+});
+
+export type GetEventRequest = z.infer<typeof getEventSchema>;
+export type GetEventResponse = z.infer<typeof getEventResponseSchema>;
