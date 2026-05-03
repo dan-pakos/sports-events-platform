@@ -5,10 +5,32 @@ export { ZodError, type ZodIssue } from "zod";
 // shared schema for validating request for creating new event
 export const createEventSchema = z.object({
   sport_id: z.uuid(),
-  start_time: z.iso.datetime({
-    offset: true,
-  }),
-  timezone: z.string().min(1),
+  start_time: z.iso
+    .datetime({
+      offset: true,
+    })
+    .refine(
+      (val) => {
+        const startTime = new Date(val);
+        const now = new Date();
+        return startTime > now;
+      },
+      { message: "Cannot schedule an event in the past." },
+    ),
+  timezone: z
+    .string()
+    .min(1)
+    .refine(
+      (val) => {
+        try {
+          Intl.DateTimeFormat(undefined, { timeZone: val });
+          return true;
+        } catch (err) {
+          return false;
+        }
+      },
+      { message: "Invalid timezone." },
+    ),
   participants: z
     .array(
       z.object({
@@ -16,7 +38,7 @@ export const createEventSchema = z.object({
         role: z.string(),
       }),
     )
-    .min(2),
+    .min(2, "An event must have at least two participants."),
 });
 
 // Infer the TypeScript type from the Zod schema

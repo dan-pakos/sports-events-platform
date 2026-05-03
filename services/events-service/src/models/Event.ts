@@ -84,25 +84,6 @@ export class Event {
     participants: { competitorId: CompetitorId | null }[],
     metadata: Record<string, any> = {},
   ) {
-    const now = new Date();
-
-    // Cannot schedule an event in the past
-    if (startTime <= now) {
-      throw new Error("Cannot schedule an event in the past.");
-    }
-
-    // Must have at least two participants
-    if (participants.length < 2) {
-      throw new Error("An event must have at least two participants.");
-    }
-
-    // Must include valida timezone
-    try {
-      Intl.DateTimeFormat(undefined, { timeZone: timezone });
-    } catch (e) {
-      throw new Error(`Invalid timezone: ${timezone}`);
-    }
-
     return {
       sportId,
       startTime,
