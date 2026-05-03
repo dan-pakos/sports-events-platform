@@ -84,13 +84,15 @@ export type GetEventResponse = z.infer<typeof getEventResponseSchema>;
 
 // GET EVENTS
 
-export const getEventsSchema = z.object({
-  page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).max(50).default(10),
-  status: z.string().optional(),
-  sport_id: z.uuid().optional(),
-  sort: z.enum(["asc", "desc"]).default("asc"),
-});
+export const getEventsSchema = z
+  .object({
+    page: z.coerce.number().min(1).default(1),
+    limit: z.coerce.number().min(1).max(50).default(10),
+    status: z.string().optional(),
+    sport_id: z.uuid().optional(),
+    sort: z.enum(["asc", "desc"]).default("asc"),
+  })
+  .strict();
 
 export const getEventsResponseSchema = z.object({
   events: z.array(getEventResponseSchema),
