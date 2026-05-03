@@ -87,7 +87,7 @@ export class EventController {
    * @param request
    * @returns
    */
-  async deleteEvent(request: DeleteEventRequest): Promise<DeleteEventResponse> {
+  async delete(request: DeleteEventRequest): Promise<DeleteEventResponse> {
     const event_id = request.event_id as EventId;
 
     try {
@@ -106,7 +106,7 @@ export class EventController {
           return {
             success: false,
             code: "NOT_FOUND",
-            error: "Event with provided id has been not found",
+            error: "Event with provided ID was not found",
           };
         }
       }

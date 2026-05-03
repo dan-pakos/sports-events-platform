@@ -59,4 +59,37 @@ export default class EventsService extends Service {
       });
     }
   };
+
+  /**
+   * Public async method for handling gRPC delete event request
+   * @param call
+   * @param callback
+   */
+  deleteEvent = async (
+    call: grpc.ServerUnaryCall<any, any>,
+    callback: grpc.sendUnaryData<any>,
+  ) => {
+    try {
+      // process request via controller
+      const result = await this.#ctrl.delete(call.request);
+
+      if (!result.success) {
+        callback({
+          code: result.code ? ErrorMap[result.code] : grpc.status.UNKNOWN,
+          details: result.error,
+        });
+      } else {
+        // success
+        callback(null, result);
+      }
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Internal Server Error";
+
+      callback({
+        code: grpc.status.INTERNAL,
+        details: message,
+      });
+    }
+  };
 }
