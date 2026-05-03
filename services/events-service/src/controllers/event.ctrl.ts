@@ -8,6 +8,7 @@ import {
   createEventSchema,
   CreateEventRequest,
   DeleteEventRequest,
+  GetEventRequest,
 } from "@sep/contracts";
 
 type CreateEventResult = {
@@ -22,6 +23,22 @@ type DeleteEventResult = {
   code?: string;
   error?: string;
 };
+
+export type EventData = {
+  id: string;
+  sport_id: string;
+  start_time: string;
+  timezone: string;
+  status: string;
+  participants: {
+    competitor_id: string;
+    role: string;
+  }[];
+};
+
+export type GetEventResult =
+  | { success: true; data: EventData }
+  | { success: false; code: string; error: string };
 
 /**
  * Class representing Event Controller
@@ -138,6 +155,56 @@ export class EventController {
         }
       }
 
+      // generic error
+      throw error;
+    }
+  }
+
+  async getEvent(request: GetEventRequest): Promise<GetEventResult> {
+    try {
+      const id = request.id as EventId;
+
+      if (!id) {
+        return {
+          success: false,
+          code: "VALIDATION_ERROR",
+          error: "ID is required",
+        };
+      }
+
+      // Try to get event from the database
+      const event = await this.#prisma.event.findUnique({
+        where: {
+          id: request.id,
+        },
+        include: {
+          participants: true,
+        },
+      });
+
+      if (!event) {
+        return {
+          success: false,
+          code: "NOT_FOUND",
+          error: "Event with provided ID was not found.",
+        };
+      }
+
+      return {
+        success: true,
+        data: {
+          id: event.id,
+          sport_id: event.sportId,
+          start_time: event.startTime.toISOString(),
+          timezone: event.timezone,
+          status: event.status,
+          participants: event.participants.map((p) => ({
+            competitor_id: p.competitorId,
+            role: p.role ?? "",
+          })),
+        },
+      };
+    } catch (error) {
       // generic error
       throw error;
     }
