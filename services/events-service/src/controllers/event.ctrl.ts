@@ -160,6 +160,11 @@ export class EventController {
     }
   }
 
+  /**
+   * Public async method to get a single event
+   * @param request
+   * @returns
+   */
   async getEvent(request: GetEventRequest): Promise<GetEventResult> {
     try {
       const id = request.id as EventId;
