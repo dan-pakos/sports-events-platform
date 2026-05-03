@@ -1,21 +1,16 @@
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import type { FastifyInstance } from "fastify";
-import { deleteEventSchema, type DeleteEventRequest } from "@sep/contracts";
+import { deleteEventSchema, DeleteEventRequest } from "@sep/contracts";
 
 export const deleteEventMethod = (app: FastifyInstance) => {
-  app.withTypeProvider<ZodTypeProvider>().post(
-    "/",
+  app.withTypeProvider<ZodTypeProvider>().delete(
+    "/:id",
     {
       schema: {
         description: "Delete sports event",
         tags: ["Events"],
-        body: deleteEventSchema,
-        examples: [
-          {
-            event_id: "55555555-5555-5555-5555-555555555555",
-          },
-        ],
+        params: deleteEventSchema,
         response: {
           201: z.object({
             message: z.string(),
@@ -29,6 +24,9 @@ export const deleteEventMethod = (app: FastifyInstance) => {
               }),
             ),
           }),
+          404: z.object({
+            message: z.string(),
+          }),
           500: z.object({
             message: z.string(),
           }),
@@ -36,26 +34,32 @@ export const deleteEventMethod = (app: FastifyInstance) => {
       },
     },
     async (request, reply) => {
-      const payload = request.body as DeleteEventRequest;
+      const payload = request.params as DeleteEventRequest;
 
-      const response = await app.grpcClients.events.deleteEvent(payload);
+      try {
+        await app.grpcClients.events.deleteEvent(payload);
 
-      if (!response.success) {
-        /**
-         * We don't want to expose backend gRPC errors as client response
-         */
-        app.log.error(
-          `Backend Service Error (${response.code}): ${response.message}`,
-        );
+        return reply.code(201).send({
+          message: "Event has been deleted successfully",
+        });
+      } catch (error) {
+        const grpcError = error as Error & { code?: number };
+        // Handle 404 from grpc
+        // NOTE: 5 code in gRPC is NOT_FOUND
+        // TODO: Move to shared error type
+        if (grpcError.code === 5) {
+          return reply.code(404).send({
+            message: "Event with provided ID not found ",
+          });
+        }
+
+        // We don't want to expose other errors as API response, so log instead and return generic error
+        app.log.error(error);
 
         return reply.code(500).send({
-          message: "Backend Service Error",
+          message: "Internal Server Error",
         });
       }
-
-      return reply.code(201).send({
-        message: "Event has been deleted successfully",
-      });
     },
   );
 };

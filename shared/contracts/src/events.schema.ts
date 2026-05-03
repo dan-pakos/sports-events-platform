@@ -56,13 +56,8 @@ export type CreateEventResponse = {
 // DELETE
 
 export const deleteEventSchema = z.object({
-  event_id: z.uuid(),
+  id: z.uuid(),
 });
 
 export type DeleteEventRequest = z.infer<typeof deleteEventSchema>;
-
-export type DeleteEventResponse = {
-  success: boolean;
-  code?: string;
-  error?: string;
-};
+export type DeleteEventResponse = {};

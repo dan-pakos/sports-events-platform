@@ -8,8 +8,13 @@ import {
   CreateEventRequest,
   CreateEventResponse,
   DeleteEventRequest,
-  DeleteEventResponse,
 } from "@sep/contracts";
+
+type DeleteEventResult = {
+  success: boolean;
+  code?: string;
+  error?: string;
+};
 
 /**
  * Class representing Event Controller
@@ -61,7 +66,10 @@ export class EventController {
           participants: {
             create: validNewEventData.participants.map((p) => ({
               competitor: {
-                connect: { id: p.competitorId as string },
+                connect: {
+                  id: p.competitorId as string,
+                  role: p.role as string,
+                },
               },
             })),
           },
@@ -87,13 +95,21 @@ export class EventController {
    * @param request
    * @returns
    */
-  async delete(request: DeleteEventRequest): Promise<DeleteEventResponse> {
-    const event_id = request.event_id as EventId;
-
+  async delete(request: DeleteEventRequest): Promise<DeleteEventResult> {
     try {
+      const id = request.id as EventId;
+
+      if (!id) {
+        return {
+          success: false,
+          code: "VALIDATION_ERROR",
+          error: "ID is required",
+        };
+      }
+
       // Try to delete event from the database
       await this.#prisma.event.delete({
-        where: { id: event_id },
+        where: { id: id },
       });
 
       return {
@@ -112,12 +128,7 @@ export class EventController {
       }
 
       // generic error
-      const message = error instanceof Error ? error.message : "Unknown error";
-      return {
-        success: false,
-        code: "INTERNAL_ERROR",
-        error: message,
-      };
+      throw error;
     }
   }
 }

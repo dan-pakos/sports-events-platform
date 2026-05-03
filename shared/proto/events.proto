@@ -15,14 +15,10 @@ message CreateEventRequest {
 }
 
 message DeleteEventRequest {
-  string event_id = 1;
+  string id = 1;
 }
 
-message DeleteEventResponse {
-  bool success = 1;
-  string code = 2;
-  string error = 3;
-}
+message DeleteEventResponse {}
 
 message CreateEventResponse {
   bool success = 1;

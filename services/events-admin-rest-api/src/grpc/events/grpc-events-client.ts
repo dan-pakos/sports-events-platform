@@ -37,6 +37,10 @@ export class EventsClientWrapper {
     return await this.#invoke("CreateEvent", data);
   }
 
+  async deleteEvent(data: DeleteEventRequest): Promise<DeleteEventResponse> {
+    return await this.#invoke("DeleteEvent", data);
+  }
+
   async #invoke<K extends keyof EventsServiceClient, TResponse>(
     methodName: K,
     data: unknown,
@@ -53,9 +57,5 @@ export class EventsClientWrapper {
         },
       );
     });
-  }
-
-  async deleteEvent(data: DeleteEventRequest): Promise<DeleteEventResponse> {
-    return await this.#invoke("DeleteEvent", data);
   }
 }
