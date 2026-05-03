@@ -2,23 +2,16 @@ import type { Client, ServiceError, ClientUnaryCall } from "@grpc/grpc-js";
 import type {
   CreateEventRequest,
   CreateEventResponse,
-  DeleteEventRequest,
-  DeleteEventResponse,
+  GetEventRequest,
+  GetEventResponse, 
 } from "@sep/contracts";
 
 export interface EventsServiceClient extends Client {
-  CreateEvent(
+  GetEvent(
     request: CreateEventRequest,
     callback: (
       error: ServiceError | null,
       response: CreateEventResponse,
-    ) => void,
-  ): ClientUnaryCall;
-  DeleteEvent(
-    request: DeleteEventRequest,
-    callback: (
-      error: ServiceError | null,
-      response: DeleteEventResponse,
     ) => void,
   ): ClientUnaryCall;
 }
@@ -33,12 +26,8 @@ export class EventsClientWrapper {
     this.#client = client;
   }
 
-  async createEvent(data: CreateEventRequest): Promise<CreateEventResponse> {
-    return await this.#invoke("CreateEvent", data);
-  }
-
-  async deleteEvent(data: DeleteEventRequest): Promise<DeleteEventResponse> {
-    return await this.#invoke("DeleteEvent", data);
+  async getEvent(data: GetEventRequest): Promise<GetEventResponse> {
+    return await this.#invoke("GetEvent", data);
   }
 
   async #invoke<K extends keyof EventsServiceClient, TResponse>(

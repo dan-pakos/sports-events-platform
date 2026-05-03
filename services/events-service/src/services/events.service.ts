@@ -113,7 +113,7 @@ export default class EventsService extends Service {
         });
       } else {
         // success
-        callback(null, result);
+        callback(null, result.data);
       }
     } catch (error: unknown) {
       const message =
