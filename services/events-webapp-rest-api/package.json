@@ -1,0 +1,47 @@
+{
+  "name": "@sep/events-webapp-rest-api",
+  "version": "1.0.0",
+  "description": "Events WebApp REST API",
+  "type": "module",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "dev:docker": "nodemon -L --inspect=0.0.0.0 src/index.ts",
+    "build": "tsup src/index.ts --format esm --clean --minify --dts",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.4",
+  "dependencies": {
+    "@fastify/autoload": "^6.3.1",
+    "@fastify/cors": "^11.2.0",
+    "@fastify/env": "^6.0.0",
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.6",
+    "@sep/contracts": "workspace:*",
+    "@sep/fastify-logger": "workspace:*",
+    "@sep/grpc-client": "workspace:*",
+    "@sep/proto": "workspace:*",
+    "fastify": "^5.8.5",
+    "fastify-plugin": "^5.1.0",
+    "fastify-type-provider-zod": "^6.1.0",
+    "pino": "^9.0.0",
+    "zod": "^4.4.1"
+  },
+  "devDependencies": {
+    "@grpc/grpc-js": "^1.14.3",
+    "@sep/eslint-config": "workspace:*",
+    "@sep/tsconfig": "workspace:*",
+    "@types/node": "^20.19.39",
+    "eslint": "^10.2.1",
+    "nodemon": "^3.1.14",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.0.0"
+  }
+}
