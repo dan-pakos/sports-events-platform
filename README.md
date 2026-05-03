@@ -87,10 +87,11 @@ To handle high traffic and ensure system reliability, the infrastructure could e
 
 #### Events Service
 
+The core gRPC microservice responsible for the lifecycle and persistence of sports events data.
+
 Located: `services/events-service`
 
-The core gRPC microservice responsible for the lifecycle and persistence of sports events data.
-[Events Service - README.md](/services/events-service/README.md)
+Documentation: [README.md](/services/events-service/README.md)
 
 #### Database
 
@@ -118,6 +119,7 @@ The database is designed as a relational PostgreSQL schema, optimized for sports
 Microservice with full CRUD (Create, Read, Update, Delete) operations for sports, teams, and individual athletes. It exposes REST API for **Events Admin**
 
 Located: `services/events-admin-rest-api`
+
 Documentation: [README](./services/events-admin-rest-api/README.md)
 
 #### Events WebApp REST API
@@ -126,6 +128,7 @@ Microservice responsible for reads operations for sports events, sports, teams, 
 It exposes REST API for **Events WebApp**
 
 Located: `services/events-webapp-rest-api`
+
 Documentation: [README](./services/events-webapp-rest-api/README.md)
 
 #### Events WebApp
