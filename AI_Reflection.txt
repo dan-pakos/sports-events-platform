@@ -1,0 +1,9 @@
+I utilized Google Gemini 3 Flash for various technical tasks, 
+primarily focusing on troubleshooting, FAQ generation, and third-party API discovery. 
+
+My generative use cases included:
+- Generating Markdown tables;
+- Validating Prisma schemas;
+- Zod schemas for runtime validation;
+- Generating TypeScript types, particularly for gRPC;
+- Discovering Prisma query syntax and exploring its generated types;
