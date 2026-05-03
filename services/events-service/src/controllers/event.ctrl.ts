@@ -1,4 +1,8 @@
-import { type PrismaClient, Prisma } from "./../generated/prisma/index.js";
+import {
+  type PrismaClient,
+  Prisma,
+  EventStatus,
+} from "./../generated/prisma/index.js";
 import { Event } from "./../models/Event.ts";
 import { ZodError } from "@sep/contracts";
 import {
@@ -9,6 +13,7 @@ import {
   CreateEventRequest,
   DeleteEventRequest,
   GetEventRequest,
+  GetEventsRequest,
 } from "@sep/contracts";
 
 type CreateEventResult = {
@@ -38,6 +43,20 @@ export type EventData = {
 
 export type GetEventResult =
   | { success: true; data: EventData }
+  | { success: false; code: string; error: string };
+
+export type GetEventsResult =
+  | {
+      success: true;
+      data: {
+        events: EventData[];
+        meta: {
+          total_count: number;
+          total_pages: number;
+          current_page: number;
+        };
+      };
+    }
   | { success: false; code: string; error: string };
 
 /**
@@ -212,6 +231,79 @@ export class EventController {
     } catch (error) {
       // generic error
       throw error;
+    }
+  }
+
+  async getEvents(request: GetEventsRequest): Promise<GetEventsResult> {
+    try {
+      const { page, limit, status, sport_id, sort } = request;
+
+      const skip = (page - 1) * limit;
+      const take = limit;
+
+      // Apply filters
+      const whereClause: Prisma.EventWhereInput = {};
+
+      if (status) {
+        whereClause.status = status as EventStatus;
+      }
+      if (sport_id) {
+        whereClause.sportId = sport_id;
+      }
+
+      // Call all queries as transaction
+      const [events, totalCount] = await this.#prisma.$transaction([
+        // 1. Query - fidMany filtered
+        this.#prisma.event.findMany({
+          where: whereClause,
+          skip: skip,
+          take: take,
+          orderBy: {
+            startTime: sort === "desc" ? "desc" : "asc",
+          },
+          include: {
+            participants: true,
+          },
+        }),
+
+        // 2. Query - Count all events
+        this.#prisma.event.count({
+          where: whereClause,
+        }),
+      ]);
+
+      const totalPages = Math.ceil(totalCount / take);
+
+      return {
+        success: true,
+        data: {
+          events: events.map((event) => ({
+            id: event.id,
+            sport_id: event.sportId,
+            start_time: event.startTime.toISOString(),
+            timezone: event.timezone,
+            status: event.status,
+            participants: event.participants.map((p) => ({
+              competitor_id: p.competitorId,
+              role: p.role ?? "",
+            })),
+          })),
+          meta: {
+            total_count: totalCount,
+            total_pages: totalPages,
+            current_page: page,
+          },
+        },
+      };
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Internal Server Error";
+
+      return {
+        success: false,
+        code: "INTERNAL_ERROR",
+        error: message,
+      };
     }
   }
 }
