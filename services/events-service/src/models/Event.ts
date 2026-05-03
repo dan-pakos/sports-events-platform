@@ -2,6 +2,7 @@ import { EventId, EventStatus, SportId, CompetitorId } from "@sep/contracts";
 
 export interface Participant {
   competitorId: CompetitorId;
+  role: string; // TODO: use enums
 }
 
 export class Event {
@@ -81,7 +82,7 @@ export class Event {
     sportId: SportId,
     startTime: Date,
     timezone: string,
-    participants: { competitorId: CompetitorId | null }[],
+    participants: Participant[],
     metadata: Record<string, any> = {},
   ) {
     return {
@@ -92,6 +93,7 @@ export class Event {
       metadata,
       participants: participants.map((p) => ({
         competitorId: p.competitorId,
+        role: p.role,
       })),
     };
   }

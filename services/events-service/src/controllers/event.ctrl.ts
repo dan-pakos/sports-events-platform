@@ -6,7 +6,6 @@ import {
   createEventSchema,
   CreateEventRequest,
   CreateEventResponse,
-  ZodError,
 } from "@sep/contracts";
 
 /**
@@ -37,6 +36,7 @@ export class EventController {
       const timezone = parsedData.timezone;
       const participants = parsedData.participants.map((p) => ({
         competitorId: p.competitor_id as CompetitorId,
+        role: p.role as string,
       }));
 
       // 3. Model Execution (Business Constarins)
@@ -70,14 +70,6 @@ export class EventController {
         event_id: insertedEvent.id,
       };
     } catch (error: unknown) {
-      if (error instanceof ZodError) {
-        return {
-          success: false,
-          code: "VALIDATION_ERROR",
-          error: error.issues.map((e) => e.message).join(", "),
-        };
-      }
-
       const message = error instanceof Error ? error.message : "Unknown error";
       return {
         success: false,
