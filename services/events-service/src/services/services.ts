@@ -15,5 +15,6 @@ export const addServices = (server: Server, app: FastifyInstance): void => {
     createEvent: eventsService.createEvent,
     deleteEvent: eventsService.deleteEvent,
     getEvent: eventsService.getEvent,
+    getEvents: eventsService.getEvents,
   });
 };

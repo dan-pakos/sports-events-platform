@@ -125,4 +125,37 @@ export default class EventsService extends Service {
       });
     }
   };
+
+  /**
+   * Public async method for handling gRPC get events request
+   * @param call
+   * @param callback
+   */
+  getEvents = async (
+    call: grpc.ServerUnaryCall<any, any>,
+    callback: grpc.sendUnaryData<any>,
+  ) => {
+    try {
+      // process request via controller
+      const result = await this.#ctrl.getEvents(call.request);
+
+      if (!result.success) {
+        callback({
+          code: result.code ? ErrorMap[result.code] : grpc.status.UNKNOWN,
+          details: result.error,
+        });
+      } else {
+        // success
+        callback(null, result.data);
+      }
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Internal Server Error";
+
+      callback({
+        code: grpc.status.INTERNAL,
+        details: message,
+      });
+    }
+  };
 }
