@@ -14,6 +14,16 @@ message CreateEventRequest {
   repeated CreateEventParticipant participants = 4;
 }
 
+message DeleteEventRequest {
+  string event_id = 1;
+}
+
+message DeleteEventResponse {
+  bool success = 1;
+  string code = 2;
+  string error = 3;
+}
+
 message CreateEventResponse {
   bool success = 1;
   string event_id = 2;
@@ -23,4 +33,5 @@ message CreateEventResponse {
 
 service EventsService {
   rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse);
+  rpc DeleteEvent (DeleteEventRequest) returns (DeleteEventResponse);
 }
