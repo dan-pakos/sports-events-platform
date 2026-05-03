@@ -92,6 +92,33 @@ services:
     command: bash -c "cd ./services/events-admin-rest-api && pnpm run dev:docker"
     networks:
       - sep-network
+  event-webapp-rest-api:
+    container_name: ${SEP_WEB_NAME}
+    env_file:
+      - .env.development
+    environment:
+      APP_HOST: ${SEP_WEB_APP_HOST}
+      APP_PORT: ${SEP_WEB_APP_PORT}
+      NODE_ENV: ${NODE_ENV}
+      LOG_LEVEL: ${LOG_LEVEL}
+      LOG_CLOUDWATCH_GROUP: ${SEP_LOG_CLOUDWATCH_GROUP}
+      LOG_CLOUDWATCH_REGION: ${SEP_LOG_CLOUDWATCH_REGION}
+      PROTO_ROOT: ${PROTO_ROOT}
+      EVENTS_SERVICE_URL: ${SEP_EVENTS_SERVICE_URL}
+    ports:
+      - "${SEP_WEB_APP_PORT}:${SEP_WEB_APP_PORT}"
+    build:
+      context: .
+      dockerfile: ./services/events-webapp-rest-api/Dockerfile.dev
+    depends_on:
+      events-db:
+        condition: service_healthy
+    volumes:
+      - ./services/events-webapp-rest-api/src:/var/web/services/events-webapp-rest-api/src
+      - /var/web/services/events-webapp-rest-api/node_modules
+    command: bash -c "cd ./services/events-webapp-rest-api && pnpm run dev:docker"
+    networks:
+      - sep-network
 
 ##############################
 # SHARED RESOURCES
