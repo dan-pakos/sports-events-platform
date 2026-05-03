@@ -1,4 +1,4 @@
-import { CompetitorId, SportId, CompetitorType } from "./types.js";
+import { CompetitorId, SportId, CompetitorType } from "@sep/contracts";
 
 export class Competitor {
   #id: CompetitorId;

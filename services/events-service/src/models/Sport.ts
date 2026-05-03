@@ -1,4 +1,4 @@
-import { SportId } from "./types.ts";
+import { SportId } from "@sep/contracts";
 
 export class Sport {
   #id: SportId;
