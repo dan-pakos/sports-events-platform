@@ -1,11 +1,14 @@
-import type { PrismaClient } from "./../generated/prisma/index.js";
+import { type PrismaClient, Prisma } from "./../generated/prisma/index.js";
 import { Event } from "./../models/Event.ts";
 import {
+  EventId,
   SportId,
   CompetitorId,
   createEventSchema,
   CreateEventRequest,
   CreateEventResponse,
+  DeleteEventRequest,
+  DeleteEventResponse,
 } from "@sep/contracts";
 
 /**
@@ -70,6 +73,45 @@ export class EventController {
         event_id: insertedEvent.id,
       };
     } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      return {
+        success: false,
+        code: "INTERNAL_ERROR",
+        error: message,
+      };
+    }
+  }
+
+  /**
+   * Public async method to delete an event
+   * @param request
+   * @returns
+   */
+  async deleteEvent(request: DeleteEventRequest): Promise<DeleteEventResponse> {
+    const event_id = request.event_id as EventId;
+
+    try {
+      // Try to delete event from the database
+      await this.#prisma.event.delete({
+        where: { id: event_id },
+      });
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        // Prisma uses "P2025" when record is not found
+        if (error.code === "P2025") {
+          return {
+            success: false,
+            code: "NOT_FOUND",
+            error: "Event with provided id has been not found",
+          };
+        }
+      }
+
+      // generic error
       const message = error instanceof Error ? error.message : "Unknown error";
       return {
         success: false,
