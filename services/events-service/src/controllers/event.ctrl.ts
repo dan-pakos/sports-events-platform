@@ -180,7 +180,7 @@ export class EventController {
       // Try to get event from the database
       const event = await this.#prisma.event.findUnique({
         where: {
-          id: request.id,
+          id: id,
         },
         include: {
           participants: true,

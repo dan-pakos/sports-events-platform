@@ -81,3 +81,25 @@ export const getEventResponseSchema = z.object({
 
 export type GetEventRequest = z.infer<typeof getEventSchema>;
 export type GetEventResponse = z.infer<typeof getEventResponseSchema>;
+
+// GET EVENTS
+
+export const getEventsSchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(50).default(10),
+  status: z.string().optional(),
+  sport_id: z.uuid().optional(),
+  sort: z.enum(["asc", "desc"]).default("asc"),
+});
+
+export const getEventsResponseSchema = z.object({
+  events: z.array(getEventResponseSchema),
+  meta: z.object({
+    total_count: z.number().int().nonnegative(),
+    total_pages: z.number().int().nonnegative(),
+    current_page: z.number().int().min(1),
+  }),
+});
+
+export type GetEventsRequest = z.infer<typeof getEventsSchema>;
+export type GetEventsResponse = z.infer<typeof getEventResponseSchema>;
